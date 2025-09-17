@@ -17,4 +17,4 @@ The tool emits the following sections separated by one or two blank lines (skipp
 5. Top-level program code (top-level statements)
    - Default: `Console.WriteLine("Hello, World!");`
 
-Note: `Microsoft.NET.Sdk` is considered the default SDK and won’t be included even if you pass it to `--sdk`.
+Note: All SDKs you specify are emitted. If you include `Microsoft.NET.Sdk`, it will be present as `#:sdk Microsoft.NET.Sdk`.

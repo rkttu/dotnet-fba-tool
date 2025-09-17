@@ -8,6 +8,28 @@ File-based app source scaffolding tool for .NET 10.0 and later
 
 This repository itself is authored in a file-based style (`dotnet_fba.cs`). After converting, you can `dotnet pack` to create a .NET Global Tool.
 
+## Templates
+
+`dotnet-fba-tool` provides ready-to-use templates you can select with `-t|--template`:
+
+- Console (default): Minimal console app that prints "Hello, World!".
+- GenericHost: Uses Microsoft.Extensions.Hosting to build and run a generic host with console logging.
+- WebHost: Minimal ASP.NET Core Web app (`Microsoft.NET.Sdk.Web`) with a single `GET /` endpoint.
+- AspireAppHost: App Host template using .NET Aspire (adds `Aspire.AppHost.Sdk@9.4.2` and package `Aspire.Hosting.AppHost@9.4.2`) with example containers (MySQL, phpMyAdmin, WordPress). Requires a container runtime—Podman recommended (Docker also works).
+
+Example:
+
+```bash
+# Console (default)
+dotnet-fba -o ./Program.cs -p TargetFramework=net10.0 -p OutputType=Exe
+
+# WebHost
+dotnet-fba -t WebHost -o ./WebApp.cs -p TargetFramework=net10.0 -p OutputType=Exe
+
+# Aspire AppHost (container runtime required; Podman recommended)
+dotnet-fba -t AspireAppHost -o ./AppHost.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
 ## Quick start
 
 Create a one-file app scaffold and run with minimal properties:
@@ -20,6 +42,7 @@ More examples and options:
 
 - Basic usage and variations: see [docs/usage.md](./docs/usage.md)
 - CLI options reference: see [docs/cli-options.md](./docs/cli-options.md)
+- Templates overview and examples: see [docs/usage.md#template-presets]
 
 ## Install as a .NET Global Tool
 
@@ -88,6 +111,7 @@ Notes:
 - Use `--prerelease` if the NuGet package version you want is a prerelease.
 - You can pin versions and configure feeds; see `dnx --help` for advanced usage.
 - Security: as with any streamed/remote execution, run packages from sources you trust.
+- Templates: you can pass `-t WebHost`, `-t GenericHost`, or `-t AspireAppHost` after `--` to choose a preset (default: Console).
 
 ## Helper scripts
 

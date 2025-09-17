@@ -48,6 +48,36 @@ dotnet-fba -o .\hello.cs `
    --nuget "Spectre.Console@0.49.1" --nuget "System.CommandLine@2.0.0-beta4.24105.1"
 ```
 
+## Template presets
+
+Select a preset with `-t|--template`.
+
+Console (default):
+
+```bash
+dotnet-fba -o ./Program.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
+WebHost:
+
+```bash
+dotnet-fba -t WebHost -o ./WebApp.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
+GenericHost:
+
+```bash
+dotnet-fba -t GenericHost -o ./Hosted.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
+Aspire AppHost (requires a container runtime; Podman recommended, Docker also works):
+
+```bash
+dotnet-fba -t AspireAppHost -o ./AppHost.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
+PowerShell (pwsh) uses backticks for line continuation; paths use `\` instead of `/`.
+
 ## Piping to STDOUT
 
 ```bash
