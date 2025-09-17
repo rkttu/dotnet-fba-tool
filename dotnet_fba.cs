@@ -13,6 +13,7 @@
 #:property Authors=rkttu
 #:property Description=File-based app source scaffolding tool
 #:property PackageTags=dotnet;file based app;fba
+#:property PackageReadmeFile=README.md
 
 #:package System.CommandLine.Hosting@0.4.0-alpha.25306.1
 
