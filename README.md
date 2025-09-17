@@ -116,6 +116,80 @@ PowerShell (pwsh):
 dotnet-fba -o - -p TargetFramework=net10.0 | Set-Content .\Program.cs -NoNewline
 ```
 
+## Run directly from the web (zero-install stream)
+
+You can run this tool without cloning or installing anything, by streaming the file-based source from the web and executing it in-memory. The following one-liner downloads the tool source, runs it to generate a template to STDOUT, and immediately runs the generated app—entirely via pipes.
+
+Bash/Zsh:
+
+```bash
+curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs \
+   | dotnet run - -o - \
+   | dotnet run -
+```
+
+PowerShell (pwsh):
+
+```pwsh
+curl.exe -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs `
+   | dotnet run - -o - `
+   | dotnet run -
+```
+
+### How it works
+
+This pipeline uses .NET’s file-based app execution model and standard streams:
+
+1) Fetch tool source
+    - `curl` downloads the single-file tool source (`dotnet_fba.cs`) and writes it to STDOUT.
+
+2) Run the tool from STDIN
+    - `dotnet run -` consumes the C# source from STDIN and compiles/executes it as a File‑Based App.
+    - We pass `-o -` to the tool so it emits the scaffolded C# template to STDOUT instead of a file.
+
+3) Run the generated app from STDIN
+    - The second `dotnet run -` reads the generated C# program from STDIN and runs it immediately.
+
+Effectively: stream source → run tool → stream generated app → run app — no local files required unless you choose to persist them.
+
+### Customizing the generated app
+
+You can provide properties/packages to the middle stage (the tool) as usual. For example, to ensure minimal properties are set:
+
+Bash/Zsh:
+
+```bash
+curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs \
+   | dotnet run - -o - -p TargetFramework=net10.0 -p OutputType=Exe \
+   | dotnet run -
+```
+
+PowerShell (pwsh):
+
+```pwsh
+curl.exe -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs `
+   | dotnet run - -o - -p TargetFramework=net10.0 -p OutputType=Exe `
+   | dotnet run -
+```
+
+You can also add SDKs or NuGet packages in the same way:
+
+```bash
+curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs \
+   | dotnet run - -o - \
+         --sdk "Microsoft.NET.Sdk.Web" \
+         -p TargetFramework=net10.0 -p OutputType=Exe -p LangVersion=preview \
+         --nuget "Spectre.Console@0.49.1" \
+   | dotnet run -
+```
+
+### Notes and caveats
+
+- Security: You are executing streamed code. Only run from sources you trust. Consider pinning to a specific commit/tag by hosting a fixed URL.
+- PowerShell tip: Use `curl.exe` (the native curl) to avoid the `curl` alias to `Invoke-WebRequest` which returns objects instead of raw bytes.
+- Requirements: .NET SDK 10.0 or later with File‑Based App support and internet access for the first stage.
+- Persisting output: If you want to keep the generated file, replace the middle `-o -` with a path (e.g., `-o ./Program.cs`) and then run it separately.
+
 ## Command options
 
 - `-o, --output <path>`: Output file path. If omitted, the tool chooses the first available name in the current directory like `Program1.cs`, `Program2.cs`, … Passing `-` writes to STDOUT.
