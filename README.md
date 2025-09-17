@@ -1,5 +1,10 @@
 # dotnet-fba-tool
 
+[![NuGet](https://img.shields.io/nuget/v/dotnet-fba?logo=nuget&label=NuGet)](https://www.nuget.org/packages/dotnet-fba)
+[![CI](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/ci.yml)
+[![Publish](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/publish.yml/badge.svg)](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/publish.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 File-based app source scaffolding tool for .NET 10.0 and later
 
 ## Overview
@@ -7,6 +12,35 @@ File-based app source scaffolding tool for .NET 10.0 and later
 `dotnet-fba-tool` helps you scaffold a “File‑Based App (FBA)” in a single C# file that can include SDK declarations, project properties, and package references. It generates a runnable template file. You can later convert it to a regular project with `dotnet project convert`, or keep using it as-is in your build pipeline.
 
 This repository itself is authored in a file-based style (`dotnet_fba.cs`). After converting, you can `dotnet pack` to create a .NET Global Tool.
+
+## Quickstart
+
+- Install as a .NET Global Tool (recommended):
+
+```bash
+dotnet tool install --global dotnet-fba
+dotnet-fba --help
+# or alias
+dotnet fba --help
+```
+
+- Run without installing (DNX, .NET 10+):
+
+```bash
+dnx -y dotnet-fba -- --help
+```
+
+- Stream and run (zero-install):
+
+```bash
+curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs | dotnet run - -o - | dotnet run -
+```
+
+- First scaffold example (after installing the tool):
+
+```bash
+dotnet-fba -o ./Program.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
 
 ## Templates
 
@@ -208,4 +242,4 @@ See [docs/ci-cd.md](./docs/ci-cd.md) for CI workflow and publishing rules.
 
 ## License
 
-This repository is licensed under the terms in the `LICENSE` file.
+Licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.

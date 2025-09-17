@@ -28,6 +28,8 @@ jobs:
           rm -rf ./projects
           dotnet --info
           dotnet project convert ./dotnet_fba.cs -o ./projects
+          cp -f ./Directory.Build.Props ./projects/Directory.Build.props
+          cp -f ./README.md ./projects/README.md
 
       - name: Pack
         run: |
