@@ -11,25 +11,25 @@
 #:property PackageOutputPath=nupkg
 #:property Version=1.0.0
 #:property Authors=rkttu
-#:property Description=File-based app source code scaffolding tool
-#:property PackageTags=dotnet;file bsed app;fba
+#:property Description=File-based app source scaffolding tool
+#:property PackageTags=dotnet;file based app;fba
 
 #:package System.CommandLine.Hosting@0.4.0-alpha.25306.1
 
-// Steps to generate the NuGet tool package
-// 1. Remove the 'projects' directory if exists. (dotnet project convert cannot overwrite existing directories by design.)
-// 2. Run 'dotnet project convert dotnet_fba.cs' -o projects'
-// 3. Run 'dotnet pack projects'
-// 4. Copy nupkg file from 'projects/nupkg/*.nupkg'
+// NuGet tool packaging steps (summary)
+// 1) Remove the existing 'projects' directory if present. (The convert command does not overwrite existing directories.)
+// 2) Run: dotnet project convert .\dotnet_fba.cs -o .\projects
+// 3) Run: dotnet pack .\projects
+// 4) Inspect the generated package in .\projects\nupkg\*.nupkg
 
 using System.CommandLine;
 using System.Text;
 
-var rootCommand = new RootCommand("File-based app source code scaffolding tool");
+var rootCommand = new RootCommand("File-based app source scaffolding tool");
 
 var outputOption = new Option<FileInfo>("--output", "-o")
 {
-    Description = "Output file path",
+    Description = "Output file path. Use '-' to write to standard output.",
     DefaultValueFactory = e =>
     {
         var currentDirectory = Environment.CurrentDirectory;
@@ -47,31 +47,31 @@ var outputOption = new Option<FileInfo>("--output", "-o")
 
 var forceOption = new Option<bool>("--force")
 {
-    Description = "Overwrite output file if exists.",
+    Description = "Overwrite the output file if it already exists.",
     DefaultValueFactory = e => false,
 };
 
 var emitShebangLineOption = new Option<bool>("--shebang", "-sh")
 {
-    Description = "Emit Unix shebang line.",
+    Description = "Emit a Unix shebang line.",
     DefaultValueFactory = e => false,
 };
 
 var sdkTypeOption = new Option<string[]>("--sdk")
 {
-    Description = "Which SDK to use.",
+    Description = "SDK(s) to include.",
     DefaultValueFactory = e => ["Microsoft.NET.Sdk"],
 };
 
 var propertiesOption = new Option<string[]>("--property", "-p")
 {
-    Description = "Project properties to override.",
+    Description = "Override project properties.",
     DefaultValueFactory = e => Array.Empty<string>(),
 };
 
 var disableAotOption = new Option<bool>("--disable-aot")
 {
-    Description = "Disable AOT compilation.",
+    Description = "Disable AOT (adds PublishAot=False).",
     DefaultValueFactory = e => false,
 };
 
@@ -100,7 +100,7 @@ rootCommand.SetAction(e =>
 
     if (output.Exists && !e.GetValue(forceOption))
     {
-        Console.Error.WriteLine("Cannot overwrite the output file.");
+        Console.Error.WriteLine("Refusing to overwrite the output file. Use --force to override.");
         Environment.Exit(2);
     }
 
