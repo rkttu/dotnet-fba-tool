@@ -18,3 +18,9 @@ The tool emits the following sections separated by one or two blank lines (skipp
    - Default: `Console.WriteLine("Hello, World!");`
 
 Note: All SDKs you specify are emitted. If you include `Microsoft.NET.Sdk`, it will be present as `#:sdk Microsoft.NET.Sdk`.
+
+Merging and overrides
+
+- SDKs: Duplicates are removed; all unique values are emitted in `#:sdk` lines.
+- Properties: If the same key appears multiple times (from template + CLI `-p`), the last value wins, and is emitted once as `#:property KEY=VALUE`.
+- Packages: If a package is specified multiple times (from template + CLI `--nuget`), the last `@version` wins and is emitted once as `#:package NAME@VERSION`.

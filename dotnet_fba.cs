@@ -9,7 +9,7 @@
 #:property PackAsTool=True
 #:property PackageId=dotnet-fba
 #:property PackageOutputPath=nupkg
-#:property Version=1.0.0
+#:property Version=0.0.1
 #:property Authors=rkttu
 #:property Description=File-based app source scaffolding tool
 #:property PackageTags=dotnet;file based app;fba
@@ -203,6 +203,7 @@ public enum FbaTemplateType : int
     GenericHost,
     WebHost,
     AspireAppHost,
+    StdioMcpServer,
 }
 
 public static class FbaRenderer
@@ -321,6 +322,51 @@ public static class FbaRenderer
                 ");
 
                 builder.Build().Run();
+                """,
+        },
+
+        FbaTemplateType.StdioMcpServer => new()
+        {
+            Kind = type,
+            Sdks = ["Microsoft.NET.Sdk.Web",],
+            Packages = {
+                { "ModelContextProtocol", "0.3.0-preview.4" },
+            },
+            Contents = """
+                // NOTE: The dotnet run .cs command may not allow multiple clients to use this MCP server simultaneously.
+                using System.ComponentModel;
+                using ModelContextProtocol.Server;
+
+                var builder = Host.CreateEmptyApplicationBuilder(default);
+                builder.Configuration.AddCommandLine(args);
+                builder.Configuration.AddEnvironmentVariables();
+                builder.Services.AddHttpClient();
+                builder.Services.AddMcpServer()
+                    .WithStdioServerTransport()
+                    .WithTools([
+                        McpServerTool.Create(IpAddressTool),
+                    ]);
+
+                var app = builder.Build();
+                app.Run();
+
+                [Description("Get the public IP address of this machine.")]
+                async Task<string> IpAddressTool(
+                    IServiceProvider services,
+                    [Description("Get IPv6 address instead of IPv4 address")] bool ipv6)
+                {
+                    try
+                    {
+                        var client = services.GetRequiredService<HttpClient>();
+                        return await client.GetStringAsync(
+                            ipv6 ? "https://api6.ipify.org" : "https://api.ipify.org"
+                            ).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"Error occurred: {ex.Message}";
+                    }
+                }
                 """,
         },
 

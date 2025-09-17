@@ -7,7 +7,7 @@
 - `-p, --property KEY=VALUE`: Override project properties (can be specified multiple times). Example: `-p TargetFramework=net10.0 -p OutputType=Exe`.
 - `--disable-aot`: Force-add `PublishAot=False`.
 - `--nuget <pkg@ver>`: Add `#:package <pkg@ver>` lines (can be specified multiple times). Example: `--nuget "Newtonsoft.Json@13.0.3"`.
-- `-t, --template <name>`: Choose a preset template. Allowed values: `Console` (default), `GenericHost`, `WebHost`, `AspireAppHost`.
+- `-t, --template <name>`: Choose a preset template. Allowed values: `Console` (default), `GenericHost`, `WebHost`, `AspireAppHost`, `StdioMcpServer`.
 
 Exit codes
 

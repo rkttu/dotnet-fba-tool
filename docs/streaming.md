@@ -54,6 +54,20 @@ curl.exe -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs `
    | dotnet run -
 ```
 
+Stdio MCP server:
+
+```bash
+curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs \
+   | dotnet run - -o - -t StdioMcpServer -p TargetFramework=net10.0 -p OutputType=Exe \
+   | dotnet run -
+```
+
+```pwsh
+curl.exe -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs `
+   | dotnet run - -o - -t StdioMcpServer -p TargetFramework=net10.0 -p OutputType=Exe `
+   | dotnet run -
+```
+
 ## Notes
 
 - Execute streamed code only from trusted sources.

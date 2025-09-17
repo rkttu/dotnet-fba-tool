@@ -50,6 +50,7 @@ dotnet-fba -o ./Program.cs -p TargetFramework=net10.0 -p OutputType=Exe
 - GenericHost: Uses Microsoft.Extensions.Hosting to build and run a generic host with console logging.
 - WebHost: Minimal ASP.NET Core Web app (`Microsoft.NET.Sdk.Web`) with a single `GET /` endpoint.
 - AspireAppHost: App Host template using .NET Aspire (adds `Aspire.AppHost.Sdk@9.4.2` and package `Aspire.Hosting.AppHost@9.4.2`) with example containers (MySQL, phpMyAdmin, WordPress). Requires a container runtime—Podman recommended (Docker also works).
+- StdioMcpServer: Minimal Model Context Protocol server over stdio (adds `ModelContextProtocol@0.3.0-preview.4`) with a sample tool `IpAddressTool` that returns the public IP address. Intended for MCP-compatible clients; running via `dotnet run` typically serves a single client at a time.
 
 Example:
 
@@ -62,6 +63,9 @@ dotnet-fba -t WebHost -o ./WebApp.cs -p TargetFramework=net10.0 -p OutputType=Ex
 
 # Aspire AppHost (container runtime required; Podman recommended)
 dotnet-fba -t AspireAppHost -o ./AppHost.cs -p TargetFramework=net10.0 -p OutputType=Exe
+
+# Stdio MCP server (stdio transport)
+dotnet-fba -t StdioMcpServer -o ./McpServer.cs -p TargetFramework=net10.0 -p OutputType=Exe
 ```
 
 ## Quick start
@@ -146,6 +150,7 @@ Notes:
 - You can pin versions and configure feeds; see `dnx --help` for advanced usage.
 - Security: as with any streamed/remote execution, run packages from sources you trust.
 - Templates: you can pass `-t WebHost`, `-t GenericHost`, or `-t AspireAppHost` after `--` to choose a preset (default: Console).
+- Templates: you can pass `-t WebHost`, `-t GenericHost`, `-t AspireAppHost`, or `-t StdioMcpServer` after `--` to choose a preset (default: Console).
 
 ## Helper scripts
 

@@ -76,6 +76,12 @@ Aspire AppHost (requires a container runtime; Podman recommended, Docker also wo
 dotnet-fba -t AspireAppHost -o ./AppHost.cs -p TargetFramework=net10.0 -p OutputType=Exe
 ```
 
+Stdio MCP server (stdio transport):
+
+```bash
+dotnet-fba -t StdioMcpServer -o ./McpServer.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
 PowerShell (pwsh) uses backticks for line continuation; paths use `\` instead of `/`.
 
 ## Piping to STDOUT
