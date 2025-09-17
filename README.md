@@ -21,6 +21,35 @@ More examples and options:
 - Basic usage and variations: see [docs/usage.md](./docs/usage.md)
 - CLI options reference: see [docs/cli-options.md](./docs/cli-options.md)
 
+## Install as a .NET Global Tool
+
+Install from NuGet:
+
+```bash
+dotnet tool install --global dotnet-fba
+```
+
+Include prerelease versions:
+
+```bash
+dotnet tool install --global dotnet-fba --prerelease
+```
+
+Update/Uninstall:
+
+```bash
+dotnet tool update    --global dotnet-fba
+dotnet tool uninstall --global dotnet-fba
+```
+
+Run after install:
+
+```bash
+dotnet-fba --help
+# or
+dotnet fba --help
+```
+
 ## Run directly from the web
 
 Stream and run without cloning or installing:
@@ -30,6 +59,35 @@ curl -sSL -o - https://rkttu.github.io/dotnet-fba-tool/dotnet_fba.cs | dotnet ru
 ```
 
 Details and variations: see [docs/streaming.md](./docs/streaming.md)
+
+## Run with DNX (NuGet, .NET 10+)
+
+Run the tool directly from NuGet without installing a global tool.
+
+- Latest stable:
+
+```bash
+dnx -y dotnet-fba -- --help
+```
+
+- Include prerelease versions:
+
+```bash
+dnx -y --prerelease dotnet-fba -- --help
+```
+
+Pass options after `--` just like the installed tool, for example:
+
+```bash
+dnx -y dotnet-fba -- -o ./Program.cs -p TargetFramework=net10.0 -p OutputType=Exe
+```
+
+Notes:
+
+- Requires .NET SDK 10.0 or later (DNX).
+- Use `--prerelease` if the NuGet package version you want is a prerelease.
+- You can pin versions and configure feeds; see `dnx --help` for advanced usage.
+- Security: as with any streamed/remote execution, run packages from sources you trust.
 
 ## Helper scripts
 

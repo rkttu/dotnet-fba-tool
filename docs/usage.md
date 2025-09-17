@@ -1,5 +1,15 @@
 # Usage
 
+## How to run (installed global tool)
+
+After installing the tool globally, you can run it as either of the following:
+
+```bash
+dotnet-fba --help
+# or
+dotnet fba --help
+```
+
 ## Basic usage
 
 Create `hello.cs` and pass minimal properties:
