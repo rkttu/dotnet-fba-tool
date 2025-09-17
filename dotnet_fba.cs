@@ -33,15 +33,19 @@ var outputOption = new Option<FileInfo>("--output", "-o")
     DefaultValueFactory = e =>
     {
         var currentDirectory = Environment.CurrentDirectory;
+        var outputPath = Path.Combine(currentDirectory, $"Program.cs");
+
+        if (!File.Exists(outputPath))
+            return new FileInfo(outputPath);
 
         for (var i = 1; i < int.MaxValue; i++)
         {
-            var outputPath = Path.Combine(currentDirectory, $"Program{i}.cs");
+            outputPath = Path.Combine(currentDirectory, $"Program{i}.cs");
             if (!File.Exists(outputPath))
                 return new FileInfo(outputPath);
         }
 
-        return new FileInfo(Path.Combine(currentDirectory, $"Program_{Guid.NewGuid().ToString("n")}.cs"));
+        return new FileInfo(Path.Combine(currentDirectory, $"Program_{Guid.NewGuid():n)}.cs"));
     },
 };
 
@@ -162,6 +166,9 @@ rootCommand.SetAction(e =>
         string.Join(Environment.NewLine, propertiesOptions),
         string.Join(Environment.NewLine, packagesOptions),
         string.Join(Environment.NewLine, topLevelProgram)).Trim());
+
+    if (outputStream is FileStream)
+        Console.WriteLine($"// A new source code file named '{output.FullName}' has been created.");
 });
 
 var parseResult = rootCommand.Parse(args);
