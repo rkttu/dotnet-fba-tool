@@ -1,0 +1,64 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'preview/v*'
+      - 'release/v*'
+
+jobs:
+  publish:
+    name: Pack and push to NuGet
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    # Secrets will be referenced at step level to avoid context warnings
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Derive version info from tag
+        id: ver
+        run: |
+          TAG="$GITHUB_REF_NAME"
+          echo "Tag: $TAG"
+          CHANNEL="${TAG%%/*}"
+          VERSION_WITH_V="${TAG#*/}"
+          VERSION="${VERSION_WITH_V#v}"
+          echo "channel=$CHANNEL" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Convert file-based project to regular project
+        run: |
+          rm -rf ./projects
+          dotnet project convert ./dotnet_fba.cs -o ./projects
+
+      - name: Pack (preview)
+        if: steps.ver.outputs.channel == 'preview'
+        run: |
+          # Use SemVer pre-release suffix for preview (e.g., 1.0.1-preview)
+          dotnet pack ./projects -c Release -o ./artifacts/nupkg \
+            -p:PackageVersion="${{ steps.ver.outputs.version }}-preview"
+
+      - name: Pack (release)
+        if: steps.ver.outputs.channel == 'release'
+        run: |
+          dotnet pack ./projects -c Release -o ./artifacts/nupkg \
+            -p:PackageVersion="${{ steps.ver.outputs.version }}"
+
+      - name: Push to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          dotnet nuget push ./artifacts/nupkg/*.nupkg \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

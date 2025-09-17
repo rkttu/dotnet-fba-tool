@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'preview/v*'
+      - 'release/v*'
+  pull_request:
+
+jobs:
+  build-nupkg:
+    name: Build nupkg and upload artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Convert file-based project to regular project
+        run: |
+          rm -rf ./projects
+          dotnet --info
+          dotnet project convert ./dotnet_fba.cs -o ./projects
+
+      - name: Pack
+        run: |
+          dotnet pack ./projects -c Release -o ./artifacts/nupkg
+
+      - name: Upload nupkg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-${{ github.sha }}
+          path: artifacts/nupkg/*.nupkg
+          if-no-files-found: error
