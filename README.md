@@ -5,6 +5,8 @@
 [![Publish](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/publish.yml/badge.svg)](https://github.com/rkttu/dotnet-fba-tool/actions/workflows/publish.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
+> This project is an experimental tool, and we have decided to discontinue development after confirming that the dotnet new-based project template is more suitable for its intended purpose. For educational purposes only, this code is archived. For a working project, please refer to the rkttu/dotnet-fba-templates repository.
+
 File-based app source scaffolding tool for .NET 10.0 and later
 
 ## Overview
@@ -248,3 +250,4 @@ See [docs/ci-cd.md](./docs/ci-cd.md) for CI workflow and publishing rules.
 ## License
 
 Licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+
